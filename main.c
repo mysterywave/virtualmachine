@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <stdint.h>
 
-#define DEBUG
+#define DEBUG 0
 #define stack_max 30
 #define TO32(x) (stack[x] << 16 | stack[x + 1])
 
@@ -10,23 +10,23 @@
     #define RAMDUMP() {printf("RAM:\n");int i;for(i = 0; i < sizeof(RAM) / sizeof(RAM[0]); i++){printf("0x%04X, ", RAM[i]);}printf("\n");if(ip < sizeof(RAM) / sizeof(RAM[0])){printf("\n%*c^\n", 8 * ip, ' ');}}
 #else
     #define RAMDUMP() {}
-    #if DEBUG >= 3
-        #define STACKDUMP() {printf("STACK:\n");int i;for(i = sptr + 1; i < stack_max; i++) {stack[i] = 0;}for(i = 0; i < stack_max; i++) {printf("%04d, ", stack[i]);}if(sptr <= 0){if(sptr == 0){printf("\n^\n");}else{printf("\n\n");}}else{printf("\n%*c^\n", 6 * sptr, ' ');}}
-        #define INDEXSTACKDUMP() {printf("STACK:\n");int i;for(i = sptr + 1; i < stack_max; i++) {stack[i] = 0;}for(i = 0; i < stack_max; i++) {if(sptr == i){printf("%d: %04d <\n", i, stack[i]);}else{printf("%d: %04d\n", i, stack[i]);}}}
-    #else
-        #define STACKDUMP() {}
-        #define INDEXSTACKDUMP() {}
-        #if DEBUG >= 2
-            #define PRINTF(x...) {printf(x);}
-        #else
-            #define PRINTF(x...) {}
-            #if DEBUG >= 1
-                #define SLEEP(x) {usleep((int)((x) * 100000));}
-            #else
-                #define SLEEP(x) {}
-            #endif
-        #endif
-    #endif
+#endif
+#if DEBUG >= 3
+    #define STACKDUMP() {printf("STACK:\n");int i;for(i = sptr + 1; i < stack_max; i++) {stack[i] = 0;}for(i = 0; i < stack_max; i++) {printf("%04d, ", stack[i]);}if(sptr <= 0){if(sptr == 0){printf("\n^\n");}else{printf("\n\n");}}else{printf("\n%*c^\n", 6 * sptr, ' ');}}
+    #define INDEXSTACKDUMP() {printf("STACK:\n");int i;for(i = sptr + 1; i < stack_max; i++) {stack[i] = 0;}for(i = 0; i < stack_max; i++) {if(sptr == i){printf("%d: %04d <\n", i, stack[i]);}else{printf("%d: %04d\n", i, stack[i]);}}}
+#else
+    #define STACKDUMP() {}
+    #define INDEXSTACKDUMP() {}
+#endif
+#if DEBUG >= 2
+    #define PRINTF(x...) {printf(x);}
+#else
+    #define PRINTF(x...) {}
+#endif
+#if DEBUG >= 1
+    #define SLEEP(x) {usleep((int)((x) * 100000));}
+#else
+    #define SLEEP(x) {}
 #endif
 
 #define END 0
